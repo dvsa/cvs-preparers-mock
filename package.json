@@ -9,14 +9,11 @@
   },
   "scripts": {
     "start": "BRANCH=local serverless offline start",
-    "start:test": "gulp start-serverless",
-    "end:test": "gulp kill-serverless",
     "build": "node_modules/typescript/bin/tsc --rootDir ./ --outDir .build --sourceMap false && npm run build:copy",
     "build:copy": "find src -type f \\( -name \"*.yml\" -or -name \"*.json\" \\) | cpio -pdm .build && find tests -type f \\( -name \"*.yml\" -or -name \"*.json\" \\)  | cpio -pdm .build",
     "test": "BRANCH=local SLS_DEBUG=* jest --testMatch=\"**/*.unitTest.ts\"",
-    "test-i": "BRANCH=local jest --testMatch=\"**/*.intTest.ts\"",
-    "tests": "npm run test && sls offline start > /dev/null 2>&1 & sleep 4 && npm run test-i && kill %1",
-    "prepush": "npm run coverage && npm run build",
+    "test-i": "BRANCH=local jest --testMatch=\"**/*.intTest.ts\" --globalSetup='./tests/scripts/setUp.ts' --globalTeardown='./tests/scripts/tearDown.ts'",
+    "prepush": "npm run coverage && npm run build && npm run test-i",
     "predeploy": "npm install && npm run prepush",
     "security-checks": "git secrets --scan && git log -p | scanrepo",
     "tslint": "tslint src/**/*.ts tests/**/*.ts -q --fix",
@@ -25,7 +22,7 @@
     "audit:check": "npm audit --json | node_modules/.bin/audit-filter --nsp-config=.nsprc --audit=-",
     "audit-dep": "npm audit",
     "package": "mkdir ${ZIP_NAME} && cp package.json package-lock.json ${ZIP_NAME}/ && cp -r .build/src/* ${ZIP_NAME}/ && cd ${ZIP_NAME} && npm ci --production && rm package.json package-lock.json && zip -qr ../${ZIP_NAME}.zip .",
-    "tools-setup": "sls dynamodb migrate && BRANCH=local node_modules/gulp/bin/gulp.js start-serverless && sls dynamodb seed --seed=preparers"
+    "tools-setup": "echo 'needed by the pipeline but nothing to do here!'"
   },
   "author": "",
   "license": "MIT",
@@ -62,7 +59,6 @@
     "audit-filter": "^0.5.0",
     "aws-lambda-mock-context": "^3.2.1",
     "babel-jest": "^24.8.0",
-    "gulp": "^4.0.2",
     "husky": "^3.0.9",
     "jest": "^24.8.0",
     "jest-plugin-context": "^2.9.0",
