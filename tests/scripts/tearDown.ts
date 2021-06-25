@@ -1,48 +1,31 @@
-/* @ts-ignore */
+const destroyProcess = (process: any) =>
+  new Promise((resolve, reject) => {
+    try {
+      process.kill();
+      resolve({ message: "✔", pid: process.pid });
+    } catch (e) {
+      reject(e);
+    }
+  });
+
 module.exports = async () => {
-  return new Promise((resolve, reject) => {
-    console.log(`
+  console.log(`
       Integration tests ✅
       ...Tearing down Integrations tests...
     `);
 
-    // console.log("global.__SERVER__");
-    // @ts-ignore
-    // console.log(global.__SERVER__.kill);
-    // console.log("process");
-    // console.log(process);
-
-    // @ts-ignore
-    const { pid } = global.__SERVER__;
-
-    // @ts-ignore
-    global.__SERVER__.on("exit", () => {
-      console.log(`Killed pid: ${pid}...`);
-      // process.exit(0);
-    });
-
-    // try {
-    // @ts-ignore
-    global.__SERVER__.kill();
-    process.exit(0);
-    // resolve("✔");
-    // } catch (e) {
-    // console.error(`Couldn't kill process ${e}`);
-    // reject(e);
-    // }
-
-    // global.__SERVER__.close((err) => {
-    //   console.log(err);
-    //   if (err) {
-    //     return reject(err);
-    //   }
-    //   // @ts-ignore
-    //   console.log(`Killed pid: ${pid}...
-    // `);
-    //   resolve("✔");
-    //   // process.exit(0);
-    // });
-
-    // process.kill(pid);
+  process.on("exit", (code) => {
+    console.log(`process exited with code: ${code}`);
   });
+
+  try {
+    // @ts-ignore
+    const { pid, message } = await destroyProcess(global.__SERVER__);
+    console.log(`destroyed process: ${pid} -> ${message}`);
+    process.exit(0);
+  } catch (e) {
+    console.info(`Forcefully exiting ${e}`);
+    console.error(`Error: ${e}`);
+    process.exit(1);
+  }
 };
