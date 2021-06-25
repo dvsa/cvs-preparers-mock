@@ -14,20 +14,18 @@ module.exports = async () => {
 
     // @ts-ignore
     const { pid } = global.__SERVER__;
-    console.log("send kill for pid");
     console.log(pid);
 
     // @ts-ignore
     global.__SERVER__.on("exit", (code) => {
       console.log(`process terminated with code ${code}`);
-      process.exit(0);
-      resolve("ok");
+      // process.exit(0);
     });
 
     try {
       // @ts-ignore
       global.__SERVER__.kill();
-      console.log("carrying");
+      resolve("✔");
     } catch (e) {
       console.error(`Couldn't kill process ${e}`);
       reject(e);
