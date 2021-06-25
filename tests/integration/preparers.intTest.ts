@@ -1,7 +1,7 @@
 /* global describe context it before beforeEach after afterEach */
 import supertest from "supertest";
-import {emptyDatabase, populateDatabase} from "../util/dbOperations";
-import {HTTPRESPONSE} from "../../src/assets/Enums";
+import { emptyDatabase, populateDatabase } from "../util/dbOperations";
+import { HTTPRESPONSE } from "../../src/assets/Enums";
 import preparersData from "../resources/preparers.json";
 
 const url = "http://localhost:3003/";
@@ -9,35 +9,39 @@ const request = supertest(url);
 
 describe("preparers", () => {
   beforeAll(async () => {
-      await emptyDatabase();
+    await emptyDatabase();
   });
 
   beforeEach(async () => {
-      await populateDatabase();
+    await populateDatabase();
   });
 
   afterEach(async () => {
-      await emptyDatabase();
+    await emptyDatabase();
   });
 
   afterAll(async () => {
-      await populateDatabase();
+    await populateDatabase();
   });
 
   describe("getPreparers", () => {
     context("when database is populated", () => {
       it("should return all preparers in the database", (done) => {
+        throw new Error("WOULLAH");
         const expectedResponse = preparersData;
 
-        request.get("preparers")
-          .end((err, res: any) => {
-            if (err) { expect.assertions(0); }
-            expect(res.statusCode).toEqual(200);
-            expect(res.headers["access-control-allow-origin"]).toEqual("*");
-            expect(res.headers["access-control-allow-credentials"]).toEqual("true");
-            expect(res.body.length).toEqual(expectedResponse.length);
-            done();
-          });
+        request.get("preparers").end((err, res: any) => {
+          if (err) {
+            expect.assertions(0);
+          }
+          expect(res.statusCode).toEqual(200);
+          expect(res.headers["access-control-allow-origin"]).toEqual("*");
+          expect(res.headers["access-control-allow-credentials"]).toEqual(
+            "true"
+          );
+          expect(res.body.length).toEqual(expectedResponse.length);
+          done();
+        });
       });
     });
   });
