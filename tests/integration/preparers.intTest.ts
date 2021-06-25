@@ -27,7 +27,6 @@ describe("preparers", () => {
   describe("getPreparers", () => {
     context("when database is populated", () => {
       it("should return all preparers in the database", (done) => {
-        throw new Error("WOULLAH");
         const expectedResponse = preparersData;
 
         request.get("preparers").end((err, res: any) => {
