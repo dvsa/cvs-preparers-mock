@@ -14,22 +14,22 @@ module.exports = async () => {
 
     // @ts-ignore
     const { pid } = global.__SERVER__;
-    console.log(pid);
 
     // @ts-ignore
-    global.__SERVER__.on("exit", (code) => {
-      console.log(`process terminated with code ${code}`);
+    global.__SERVER__.on("exit", () => {
+      console.log(`Killed pid: ${pid}...`);
       // process.exit(0);
     });
 
-    try {
-      // @ts-ignore
-      global.__SERVER__.kill();
-      resolve("✔");
-    } catch (e) {
-      console.error(`Couldn't kill process ${e}`);
-      reject(e);
-    }
+    // try {
+    // @ts-ignore
+    global.__SERVER__.kill();
+    process.exit(0);
+    // resolve("✔");
+    // } catch (e) {
+    // console.error(`Couldn't kill process ${e}`);
+    // reject(e);
+    // }
 
     // global.__SERVER__.close((err) => {
     //   console.log(err);
