@@ -11,12 +11,8 @@ const destroyProcess = (process: any) =>
 module.exports = async () => {
   console.log(`
       Integration tests ✅
-      ...Tearing down Integrations tests...
+      ...Tearing down server...
     `);
-
-  process.on("exit", (code) => {
-    console.log(`process exited with code: ${code}`);
-  });
 
   try {
     // @ts-ignore
