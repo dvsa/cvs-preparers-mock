@@ -6,27 +6,44 @@ module.exports = async () => {
       ...Tearing down Integrations tests...
     `);
 
-    console.log("global.__SERVER__");
-    //@ts-ignore
-    console.log(global.__SERVER__);
+    // console.log("global.__SERVER__");
+    // @ts-ignore
+    // console.log(global.__SERVER__.kill);
     console.log("process");
     console.log(process);
 
     // @ts-ignore
     const { pid } = global.__SERVER__;
-    console.log("pid");
+    console.log("send kill for pid");
     console.log(pid);
+
+    
     // @ts-ignore
-    global.__SERVER__.close((err) => {
-      console.log(err);
-      if (err) return reject(err);
-      // @ts-ignore
-      console.log(`Killed pid: ${pid}...
-    `);
-      resolve("✔");
-      // process.exit(0);
+    global.__SERVER__.on("exit", (code) => {
+      console.log(`process terminated with code ${code}`);
+      resolve('ok');
     });
-    console.log("after close");
+
+    try {
+    // @ts-ignore
+      global.__SERVER__.kill();
+    } catch(e) {
+      console.error(`Couldn't kill process ${e}`)
+      reject(e)
+    }
+    
+    // global.__SERVER__.close((err) => {
+    //   console.log(err);
+    //   if (err) {
+    //     return reject(err);
+    //   }
+    //   // @ts-ignore
+    //   console.log(`Killed pid: ${pid}...
+    // `);
+    //   resolve("✔");
+    //   // process.exit(0);
+    // });
+    
     // process.kill(pid);
   });
 };

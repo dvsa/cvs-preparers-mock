@@ -23,9 +23,9 @@ const setupServer = (process: any) => {
       // }
     });
 
-    process.on("exit", (code: any) =>
-      console.info(`process terminated with code: ${code}`)
-    );
+    // process.on("exit", (code: any) =>
+    //   console.info(`process terminated with code: ${code}`)
+    // );
   });
 };
 
