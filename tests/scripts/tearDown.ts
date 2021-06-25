@@ -1,11 +1,7 @@
 const destroyProcess = (process: any) =>
-  new Promise((resolve, reject) => {
-    try {
-      process.kill();
-      resolve({ message: "✔", pid: process.pid });
-    } catch (e) {
-      reject(e);
-    }
+  new Promise((resolve) => {
+    process.kill();
+    resolve({ message: "✔", pid: process.pid });
   });
 
 module.exports = async () => {
@@ -18,10 +14,8 @@ module.exports = async () => {
     // @ts-ignore
     const { pid, message } = await destroyProcess(global.__SERVER__);
     console.log(`destroyed process: ${pid} -> ${message}`);
-    // process.exit(0);
   } catch (e) {
-    console.info(`Forcefully exiting ${e}`);
+    console.info(`Couldn't kill process`);
     console.error(`Error: ${e}`);
-    process.exit(1);
   }
 };

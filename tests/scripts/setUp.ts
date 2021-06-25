@@ -2,6 +2,10 @@ import { spawn } from "child_process";
 
 // We hook to serverless offline when firing its process
 const SERVER_OK = `Offline [HTTP] listening on http://localhost`;
+// Serverless fires a local dynamo-db instance which is killed once the parent process is terminateds
+// the current serverless script checks whether a local instance is running but does not error
+// we force throwing an error so we always start from a clean slate.
+const DYNAMO_LOCAL_ERROR_THREAD = `Exception in thread "main"`;
 
 const setupServer = (process: any) => {
   return new Promise((resolve, reject) => {
@@ -13,14 +17,11 @@ const setupServer = (process: any) => {
     });
 
     process.stderr.setEncoding("utf-8").on("data", (stream: any) => {
-      // Need to check in the pipeline whether we want to exit if dynamoDB is already running
-      // can define another port for dynamoDB if it is the case, and we have one dynamoDB instance per service...
-      // seems to be what caused the issue
       console.log(stream);
+      if (stream.includes(DYNAMO_LOCAL_ERROR_THREAD)) {
+        throw new Error("Internal Java process crashed");
+      }
       reject(stream);
-      // if (stream.includes(ADDRESS_ALREADY_IN_USE)) {
-      //   reject(new Error("PORTS already in use, Bye!"));
-      // }
     });
 
     process.on("exit", (code: any) =>
