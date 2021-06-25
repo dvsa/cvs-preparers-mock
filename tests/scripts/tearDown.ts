@@ -18,7 +18,7 @@ module.exports = async () => {
     // @ts-ignore
     const { pid, message } = await destroyProcess(global.__SERVER__);
     console.log(`destroyed process: ${pid} -> ${message}`);
-    process.exit(0);
+    // process.exit(0);
   } catch (e) {
     console.info(`Forcefully exiting ${e}`);
     console.error(`Error: ${e}`);
