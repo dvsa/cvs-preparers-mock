@@ -1,0 +1,32 @@
+import util from "util";
+import { exec } from "child_process";
+const shell = util.promisify(exec);
+
+let PID_SERVER_IN_CONTAINER;
+let PID_DB_IN_CONTAINER;
+
+export const killTestSetup = async () => {
+  console.log("Trying to kill test setups in the CI 🦾 ...");
+  console.log("debug");
+  const { stdout: pses } = await shell("ps aux");
+  console.log(pses);
+  try {
+    const { stdout: serverStream } = await shell(
+      `${process.cwd()}/tests/scripts/getPidServer.sh`
+    );
+    const { stdout: DBStream } = await shell(
+      `${process.cwd()}/tests/scripts/getPidDB.sh`
+    );
+    PID_SERVER_IN_CONTAINER = serverStream.trim();
+    PID_DB_IN_CONTAINER = DBStream.trim();
+    await exec(`kill -9 ${PID_SERVER_IN_CONTAINER}`);
+    console.info(`Server pid:${PID_SERVER_IN_CONTAINER} is now killed!`);
+    await exec(`kill -9 ${PID_DB_IN_CONTAINER}`);
+    console.info(`DB pid: ${PID_DB_IN_CONTAINER} to be killed!`);
+  } catch (e) {
+    console.error(`Error: \n ${e}`);
+    throw new Error("Could not stop server & DB 💩");
+  }
+};
+
+// (async () => await killTestSetup())();
