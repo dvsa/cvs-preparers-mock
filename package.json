@@ -9,21 +9,20 @@
   },
   "scripts": {
     "start": "BRANCH=local serverless offline start",
+    "setup": "echo 'setting up repo'... && ts-node tests/scripts/installDynamoDB.ts && echo 'repo setup done ✅'",
     "build": "node_modules/typescript/bin/tsc --rootDir ./ --outDir .build --sourceMap false && npm run build:copy",
     "build:copy": "find src -type f \\( -name \"*.yml\" -or -name \"*.json\" \\) | cpio -pdm .build && find tests -type f \\( -name \"*.yml\" -or -name \"*.json\" \\)  | cpio -pdm .build",
     "test": "BRANCH=local SLS_DEBUG=* jest --testMatch=\"**/*.unitTest.ts\"",
+    "coverage": "npm t -- --runInBand --coverage",
     "test-i": "BRANCH=local jest --testMatch=\"**/*.intTest.ts\" --globalSetup='./tests/scripts/setUp.ts' --globalTeardown='./tests/scripts/tearDown.ts'",
-    "test-i2": "BRANCH=local jest --testMatch=\"**/*.intTest.ts\"",
     "prepush": "npm run coverage && npm run build && npm run test-i",
     "predeploy": "npm install && npm run prepush",
     "security-checks": "git secrets --scan && git log -p | scanrepo",
     "tslint": "tslint src/**/*.ts tests/**/*.ts -q --fix",
-    "sonar-scanner": "npm run tslint && npm run coverage && sonar-scanner",
-    "coverage": "npm t -- --runInBand --coverage",
-    "audit:check": "npm audit --json | node_modules/.bin/audit-filter --nsp-config=.nsprc --audit=-",
-    "audit-dep": "npm audit",
+    "sonar-scanner": "npm run coverage && sonar-scanner",
+    "audit": "npm audit",
     "package": "mkdir ${ZIP_NAME} && cp package.json package-lock.json ${ZIP_NAME}/ && cp -r .build/src/* ${ZIP_NAME}/ && cd ${ZIP_NAME} && npm ci --production && rm package.json package-lock.json && zip -qr ../${ZIP_NAME}.zip .",
-    "tools-setup": "echo 'needed by the pipeline but nothing to do here!'"
+    "tools-setup": "npm run setup"
   },
   "author": "",
   "license": "MIT",
@@ -101,7 +100,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run security-checks && npm audit && npm run tslint",
+      "pre-commit": "npm run security-checks && npm run audit && npm run tslint",
       "pre-push": "npm run prepush"
     }
   }
