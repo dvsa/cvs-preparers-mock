@@ -63,9 +63,7 @@ The following scripts are available, however you can refer to the `package.json`
 
 ### DynamoDB and seeding
 
-If you want the database to be populated with mock data on start, in your `serverless.yml` file, you need to set `seed` to `true`. You can find this setting under `custom > dynamodb > start`.
-
-By default, the `noStart` setting under `custom > dynamodb > start` is true. That means the DynamoDB instance will not be started automatically. To start the instance automatically on `npm run start`, you have to set this value to `false`.
+If you want the database to be populated with mock data on start, in your `serverless.yml` file, you need to set `seed` to `true`. You can find this setting under `custom > dynamodb > start`, however please note that the `start` script will already handle that for you!
 
 If you choose to run the DynamoDB instance separately, you can send the seed command with the following command:
 
@@ -85,15 +83,14 @@ custom:
 
 ### Developing locally
 
-Dynamo should not require further configuration.
+Dynamo should not require further configuration and a local instance with serverless framework will provide a mock you.
 
-Default local configuration:
+Default local configuration in `serverless.yml` file:
 
 ```yml
 migrate: true
   seed: true
   noStart: false
-# *NB: Do not push these changes. They are for local running only**
 ```
 
 ### Debugging
