@@ -38,15 +38,12 @@ module.exports = async () => {
   console.log(`\nSetting up Integration tests...\n\n`);
   try {
     const instance = await setupServer(server);
-    // await setupServer(server);
     // @ts-ignore
     const { pid } = instance;
     console.info(`
     start script running ✅ ...
     on pid: ${pid}
     `);
-    // @ts-ignore
-    // global.__SERVER__ = instance;
   } catch (e) {
     console.error("Something wrong happened:\n");
     console.error(e);

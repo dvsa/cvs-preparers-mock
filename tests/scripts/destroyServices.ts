@@ -26,8 +26,5 @@ export const killTestSetup = async () => {
   } catch (e) {
     console.error(`Error: \n ${e}`);
     process.exit(1);
-    // throw new Error("Could not stop server & DB 💩");
   }
 };
-
-// (async () => await killTestSetup())();
