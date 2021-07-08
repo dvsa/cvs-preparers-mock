@@ -22,10 +22,11 @@ export const killTestSetup = async () => {
     await exec(`kill -9 ${PID_SERVER_IN_CONTAINER}`);
     console.info(`Server pid:${PID_SERVER_IN_CONTAINER} is now killed!`);
     await exec(`kill -9 ${PID_DB_IN_CONTAINER}`);
-    console.info(`DB pid: ${PID_DB_IN_CONTAINER} to be killed!`);
+    console.info(`DB pid: ${PID_DB_IN_CONTAINER} is now killed!`);
   } catch (e) {
     console.error(`Error: \n ${e}`);
-    throw new Error("Could not stop server & DB 💩");
+    process.exit(1);
+    // throw new Error("Could not stop server & DB 💩");
   }
 };
 

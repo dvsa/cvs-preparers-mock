@@ -24,15 +24,15 @@ const setupServer = (process: any) => {
       reject(stream);
     });
 
-    process.on("exit", (code: any) =>
-      console.info(`process terminated with code: ${code}`)
+    process.on("exit", (code: any, signal: any) =>
+      console.info(
+        `process terminated with code: ${code} and signal: ${signal}`
+      )
     );
   });
 };
 
-const server = spawn("npm", ["run", "start"], {
-  // detached: true,
-});
+const server = spawn("npm", ["run", "start"], {});
 
 module.exports = async () => {
   console.log(`\nSetting up Integration tests...\n\n`);
@@ -42,8 +42,8 @@ module.exports = async () => {
     // @ts-ignore
     const { pid } = instance;
     console.info(`
-      server running ✅ ...
-     on pid: ${pid}
+    start script running ✅ ...
+    on pid: ${pid}
     `);
     // @ts-ignore
     // global.__SERVER__ = instance;
