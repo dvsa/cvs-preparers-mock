@@ -13,6 +13,7 @@
     "build": "node_modules/typescript/bin/tsc --rootDir ./ --outDir .build --sourceMap false && npm run build:copy",
     "build:copy": "find src -type f \\( -name \"*.yml\" -or -name \"*.json\" \\) | cpio -pdm .build && find tests -type f \\( -name \"*.yml\" -or -name \"*.json\" \\)  | cpio -pdm .build",
     "test": "BRANCH=local SLS_DEBUG=* jest --testMatch=\"**/*.unitTest.ts\"",
+    "format": "prettier --write .",
     "coverage": "npm t -- --runInBand --coverage",
     "test-i": "BRANCH=local jest --testMatch=\"**/*.intTest.ts\" --globalSetup='./tests/scripts/setUp.ts' --globalTeardown='./tests/scripts/tearDown.ts'",
     "prepush": "npm run coverage && npm run build && npm run test-i",
@@ -64,6 +65,7 @@
     "jest-plugin-context": "^2.9.0",
     "jest-sonar-reporter": "^2.0.0",
     "lambda-tester": "^3.6.0",
+    "prettier": "2.3.2",
     "serverless": "^2.45.2",
     "serverless-dynamodb-local": "^0.2.38",
     "serverless-offline": "^5.12.0",
@@ -100,7 +102,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run security-checks && npm run audit && npm run tslint",
+      "pre-commit": "npm run security-checks && npm run audit && npm run tslint && npm run format",
       "pre-push": "npm run prepush"
     }
   }

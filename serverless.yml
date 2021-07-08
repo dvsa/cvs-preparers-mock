@@ -16,20 +16,20 @@ provider:
   iam:
     role:
       statements:
-        - Effect: "Allow"
+        - Effect: 'Allow'
           Action:
-            - "xray:PutTraceSegments"
-            - "xray:PutTelemetryRecords"
+            - 'xray:PutTraceSegments'
+            - 'xray:PutTelemetryRecords'
           Resource:
-            - "*"
+            - '*'
 
 functions:
   getPreparers:
     handler: src/handler.handler
     events:
       - http:
-          path: "preparers"
-          method: "get"
+          path: 'preparers'
+          method: 'get'
 
 custom:
   serverless-offline:
