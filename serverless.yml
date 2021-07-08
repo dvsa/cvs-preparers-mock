@@ -1,8 +1,5 @@
-service:
-  name: cvs-svc-preparers
-
-openapi: 3.0.0
-
+service: cvs-svc-preparers
+configValidationMode: warn
 plugins:
   - serverless-dynamodb-local
   - serverless-offline
@@ -10,16 +7,21 @@ plugins:
   - serverless-plugin-typescript
 
 provider:
+  lambdaHashingVersion: 20201221
   name: aws
-  runtime: nodejs8.10
-  tracing: true # enable tracing
-  iamRoleStatements:
-    - Effect: "Allow"
-      Action:
-        - "xray:PutTraceSegments"
-        - "xray:PutTelemetryRecords"
-      Resource:
-        - "*"
+  runtime: nodejs14.x
+  tracing:
+    apiGateway: true
+    lambda: true
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - "xray:PutTraceSegments"
+            - "xray:PutTelemetryRecords"
+          Resource:
+            - "*"
 
 functions:
   getPreparers:
